@@ -192,7 +192,7 @@ function App() {
             <article className="guide-block">
               <h3>조건 입력</h3>
               <p>한 줄에 여러 명을 넣을 수 있어요.</p>
-              <div className="guide-code">같은 팀: 당당-정화</div>
+              <div className="guide-code">같은 팀: 당당-밀도</div>
               <div className="guide-code">다른 팀: 당당-희건</div>
             </article>
 

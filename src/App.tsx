@@ -28,22 +28,22 @@ const DEFAULT_FORM: FormState = {
 
 const SAMPLE_FORMS: Record<GameId, Omit<FormState, 'gameId'>> = {
   league: {
-    participantsText: '당당-D1, 영광-B1, 정화, 영재-E1, 민수-플2, 태오(골3)',
+    participantsText: '철수-D1, 영희-B1, 민수, 지훈-E1, 수진-플2, 하늘(골3)',
     teamCount: '2',
-    sameTeamText: '당당-영광',
-    separateTeamText: '당당-정화-영재',
+    sameTeamText: '철수-영희',
+    separateTeamText: '철수-민수-지훈',
   },
   valorant: {
-    participantsText: '제트-D2, 레이나-불1, 소바, 세이지-플3, 브리치(초1), 바이퍼-골2',
+    participantsText: '철수-D2, 영희-불1, 민수, 지훈-플3, 수진(초1), 하늘-골2',
     teamCount: '2',
-    sameTeamText: '제트-소바',
-    separateTeamText: '레이나-세이지-브리치',
+    sameTeamText: '철수-민수',
+    separateTeamText: '영희-지훈-수진',
   },
   pubg: {
-    participantsText: '당당-D2, 영광-골1, 정화, 영재-크1, 민수-브2, 태오(마스터)',
+    participantsText: '철수-D2, 영희-골1, 민수, 지훈-크1, 수진-브2, 하늘(마스터)',
     teamCount: '3',
-    sameTeamText: '당당-영광',
-    separateTeamText: '당당-정화-태오',
+    sameTeamText: '철수-영희',
+    separateTeamText: '철수-민수-하늘',
   },
 }
 

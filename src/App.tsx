@@ -271,7 +271,7 @@ function App() {
                   rows={2}
                   value={form.sameTeamText}
                   onChange={(event) => updateField('sameTeamText', event.target.value)}
-                  placeholder="당당-정화"
+                  placeholder="당당-밀도"
                 />
               </label>
 

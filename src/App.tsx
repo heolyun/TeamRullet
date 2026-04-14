@@ -5,7 +5,6 @@ import type { GameId, GenerationResult } from './types/team'
 import { GAME_DEFINITIONS } from './utils/gameData'
 import { getParticipantPreview } from './utils/parser'
 import { generateTeams } from './utils/teamGenerator'
-import { getGameDefinition } from './utils/tierNormalizer'
 import { prepareGeneration } from './utils/validator'
 import './App.css'
 
@@ -78,23 +77,12 @@ const loadStoredForm = (): FormState => {
   return DEFAULT_FORM
 }
 
-const formatResultForCopy = (gameLabel: string, result: GenerationResult) => {
-  const lines = [
-    `[팀 편성 결과 - ${gameLabel}]`,
-    `참가자 ${result.summary.participantCount}명 / 점수 차 ${result.summary.scoreGap} / 인원 차 ${result.summary.sizeGap}`,
-    '',
-  ]
+const formatResultForCopy = (result: GenerationResult) => {
+  const lines: string[] = ['[팀 편성 결과]', '']
 
   for (const team of result.teams) {
-    lines.push(`${team.id}팀 (총점 ${team.totalScore})`)
-    lines.push(
-      ...team.members.map((member) =>
-        member.hasTier
-          ? `- ${member.nickname} (${member.tierLabel}, ${member.score}점)`
-          : `- ${member.nickname} (기본 점수, ${member.score}점)`,
-      ),
-    )
-    lines.push('')
+    const names = team.members.map((member) => member.nickname).join(', ')
+    lines.push(`${team.id}팀: ${names}`)
   }
 
   return lines.join('\n').trim()
@@ -107,7 +95,6 @@ function App() {
   const [copied, setCopied] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  const activeGame = getGameDefinition(form.gameId)
   const deferredParticipants = useDeferredValue(form.participantsText)
   const participantPreview = getParticipantPreview(form.gameId, deferredParticipants)
   const previewNames = participantPreview.slice(0, 8)
@@ -178,7 +165,7 @@ function App() {
     }
 
     try {
-      await navigator.clipboard.writeText(formatResultForCopy(activeGame.label, result))
+      await navigator.clipboard.writeText(formatResultForCopy(result))
       setCopied(true)
     } catch {
       setErrors(['클립보드 복사에 실패했어요. 브라우저 권한을 확인해 주세요.'])
@@ -193,20 +180,20 @@ function App() {
       </header>
 
       <main className="main-layout">
-        <SectionCard eyebrow="STEP 1" title="안내" className="section-card--guide">
+        <SectionCard title="안내" className="section-card--guide">
           <div className="guide-stack">
             <article className="guide-block">
               <h3>참가자 입력</h3>
               <p>쉼표 또는 줄바꿈으로 입력할 수 있어요.</p>
-              <div className="guide-code">당당, 정화, 영재</div>
-              <div className="guide-code">당당-D1, 정화(플2), 영재</div>
+              <div className="guide-code">당당, 밀도, 희건</div>
+              <div className="guide-code">당당-M4, 밀도-GM7, 희건-아이언3</div>
             </article>
 
             <article className="guide-block">
               <h3>조건 입력</h3>
               <p>한 줄에 여러 명을 넣을 수 있어요.</p>
-              <div className="guide-code">같은 팀: 당당-영광-태오</div>
-              <div className="guide-code">다른 팀: 당당-세웅-종진-용진-찬희</div>
+              <div className="guide-code">같은 팀: 당당-정화</div>
+              <div className="guide-code">다른 팀: 당당-희건</div>
             </article>
 
             <article className="guide-block">
@@ -239,132 +226,130 @@ function App() {
           </div>
         </SectionCard>
 
-        <div className="right-column">
-          <SectionCard eyebrow="STEP 2" title="입력" className="section-card--input">
-            <div className="input-stack">
-              <div className="game-grid">
-                {GAME_DEFINITIONS.map((game) => (
-                  <button
-                    key={game.id}
-                    type="button"
-                    className={`game-card ${form.gameId === game.id ? 'game-card--active' : ''}`}
-                    onClick={() => updateField('gameId', game.id)}
-                  >
-                    {game.label}
-                  </button>
+        <SectionCard title="입력" className="section-card--input">
+          <div className="input-stack">
+            <div className="game-grid">
+              {GAME_DEFINITIONS.map((game) => (
+                <button
+                  key={game.id}
+                  type="button"
+                  className={`game-card ${form.gameId === game.id ? 'game-card--active' : ''}`}
+                  onClick={() => updateField('gameId', game.id)}
+                >
+                  {game.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="field-grid">
+              <label className="field field--wide">
+                <span>참가자 목록</span>
+                <textarea
+                  rows={5}
+                  value={form.participantsText}
+                  onChange={(event) => updateField('participantsText', event.target.value)}
+                  placeholder="당당, 밀도, 희건"
+                />
+                <small>쉼표(,) 또는 줄바꿈 구분 가능</small>
+              </label>
+
+              <label className="field field--compact">
+                <span>팀 개수</span>
+                <input
+                  type="number"
+                  min="2"
+                  max="10"
+                  value={form.teamCount}
+                  onChange={(event) => updateField('teamCount', event.target.value)}
+                  placeholder="2"
+                />
+              </label>
+
+              <label className="field field--wide">
+                <span>같은 팀 조건</span>
+                <textarea
+                  rows={2}
+                  value={form.sameTeamText}
+                  onChange={(event) => updateField('sameTeamText', event.target.value)}
+                  placeholder="당당-정화"
+                />
+              </label>
+
+              <label className="field field--wide">
+                <span>다른 팀 조건</span>
+                <textarea
+                  rows={2}
+                  value={form.separateTeamText}
+                  onChange={(event) => updateField('separateTeamText', event.target.value)}
+                  placeholder="당당-희건"
+                />
+              </label>
+            </div>
+
+            <div className="panel-actions">
+              <button className="button button--ghost" onClick={handleLoadExample}>
+                예시 채우기
+              </button>
+              <button className="button button--secondary" onClick={handleReset}>
+                초기화
+              </button>
+              <button className="button button--primary" onClick={handleGenerate}>
+                {isPending ? '팀 생성 중...' : '팀 생성하기'}
+              </button>
+            </div>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="결과" className="section-card--result">
+          {errors.length > 0 ? (
+            <div className="message-box message-box--error">
+              <strong>입력 확인이 필요해요.</strong>
+              <ul>
+                {errors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {result ? (
+            <>
+              <div className="result-toolbar">
+                <div className="result-summary">
+                  <span className="summary-pill">참가자 {result.summary.participantCount}명</span>
+                  <span className="summary-pill">점수 차 {result.summary.scoreGap}</span>
+                  <span className="summary-pill">인원 차 {result.summary.sizeGap}</span>
+                </div>
+
+                <button className="button button--primary" onClick={handleCopy}>
+                  {copied ? '복사 완료' : '결과 복사'}
+                </button>
+              </div>
+
+              {result.warnings.length > 0 ? (
+                <div className="message-box message-box--info">
+                  <strong>참고</strong>
+                  <ul>
+                    {result.warnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              <div className="team-grid">
+                {result.teams.map((team) => (
+                  <TeamResultCard key={team.id} team={team} />
                 ))}
               </div>
-
-              <div className="field-grid">
-                <label className="field field--wide">
-                  <span>참가자 목록</span>
-                  <textarea
-                    rows={5}
-                    value={form.participantsText}
-                    onChange={(event) => updateField('participantsText', event.target.value)}
-                    placeholder={activeGame.samples.join(', ')}
-                  />
-                  <small>쉼표(,) 또는 줄바꿈 구분 가능</small>
-                </label>
-
-                <label className="field field--compact">
-                  <span>팀 개수</span>
-                  <input
-                    type="number"
-                    min="2"
-                    max="10"
-                    value={form.teamCount}
-                    onChange={(event) => updateField('teamCount', event.target.value)}
-                    placeholder="2"
-                  />
-                </label>
-
-                <label className="field field--wide">
-                  <span>같은 팀 조건</span>
-                  <textarea
-                    rows={2}
-                    value={form.sameTeamText}
-                    onChange={(event) => updateField('sameTeamText', event.target.value)}
-                    placeholder={'당당-영광\n민수-태오-찬희'}
-                  />
-                </label>
-
-                <label className="field field--wide">
-                  <span>다른 팀 조건</span>
-                  <textarea
-                    rows={2}
-                    value={form.separateTeamText}
-                    onChange={(event) => updateField('separateTeamText', event.target.value)}
-                    placeholder={'정화-영재\n당당-세웅-종진-용진-찬희'}
-                  />
-                </label>
-              </div>
-
-              <div className="panel-actions">
-                <button className="button button--ghost" onClick={handleLoadExample}>
-                  예시 채우기
-                </button>
-                <button className="button button--secondary" onClick={handleReset}>
-                  초기화
-                </button>
-                <button className="button button--primary" onClick={handleGenerate}>
-                  {isPending ? '팀 생성 중...' : '팀 생성하기'}
-                </button>
-              </div>
+            </>
+          ) : (
+            <div className="empty-state">
+              <strong>아직 생성된 팀이 없어요.</strong>
+              <p>입력에서 값을 채운 뒤 팀 생성하기를 눌러 주세요.</p>
             </div>
-          </SectionCard>
-
-          <SectionCard eyebrow="STEP 3" title="결과" className="section-card--result">
-            {errors.length > 0 ? (
-              <div className="message-box message-box--error">
-                <strong>입력 확인이 필요해요.</strong>
-                <ul>
-                  {errors.map((error) => (
-                    <li key={error}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            {result ? (
-              <>
-                <div className="result-toolbar">
-                  <div className="result-summary">
-                    <span className="summary-pill">참가자 {result.summary.participantCount}명</span>
-                    <span className="summary-pill">점수 차 {result.summary.scoreGap}</span>
-                    <span className="summary-pill">인원 차 {result.summary.sizeGap}</span>
-                  </div>
-
-                  <button className="button button--primary" onClick={handleCopy}>
-                    {copied ? '복사 완료' : '결과 복사'}
-                  </button>
-                </div>
-
-                {result.warnings.length > 0 ? (
-                  <div className="message-box message-box--info">
-                    <strong>참고</strong>
-                    <ul>
-                      {result.warnings.map((warning) => (
-                        <li key={warning}>{warning}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                <div className="team-grid">
-                  {result.teams.map((team) => (
-                    <TeamResultCard key={team.id} team={team} />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="empty-state">
-                <strong>아직 생성된 팀이 없어요.</strong>
-                <p>오른쪽 입력 영역에서 값을 채운 뒤 팀 생성하기를 눌러 주세요.</p>
-              </div>
-            )}
-          </SectionCard>
-        </div>
+          )}
+        </SectionCard>
       </main>
     </div>
   )

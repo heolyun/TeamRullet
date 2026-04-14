@@ -1,18 +1,18 @@
 .app-shell {
-  width: min(1140px, calc(100% - 24px));
+  width: min(1440px, calc(100% - 24px));
   margin: 0 auto;
-  padding: 24px 0 28px;
+  padding: 12px 0 16px;
 }
 
 .page-header {
-  margin-bottom: 12px;
-  padding: 4px 2px;
+  margin-bottom: 6px;
+  padding: 0 2px 2px;
 }
 
 .page-header__eyebrow {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   color: var(--accent-strong);
-  font-size: 0.76rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -20,33 +20,30 @@
 
 .main-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.22fr);
-  gap: 14px;
-  align-items: start;
-}
-
-.right-column {
-  display: grid;
-  gap: 14px;
-  align-content: start;
+  grid-template-columns: minmax(240px, 0.72fr) minmax(360px, 1.05fr) minmax(300px, 0.9fr);
+  gap: 12px;
+  align-items: stretch;
 }
 
 .section-card {
-  padding: 18px;
-  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: 20px;
   background: rgba(255, 252, 245, 0.92);
   border: 1px solid rgba(14, 29, 36, 0.09);
-  box-shadow: 0 12px 28px rgba(15, 34, 41, 0.07);
+  box-shadow: 0 10px 22px rgba(15, 34, 41, 0.07);
+  min-height: calc(100vh - 120px);
 }
 
 .section-card__head {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .section-card__eyebrow {
   margin: 0 0 4px;
   color: var(--accent-strong);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -55,42 +52,55 @@
 .section-card__description {
   margin-top: 6px;
   color: var(--text-muted);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
+}
+
+.section-card__body {
+  flex: 1;
+  min-height: 0;
+}
+
+.section-card--guide .section-card__body,
+.section-card--input .section-card__body,
+.section-card--result .section-card__body {
+  height: 100%;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .guide-stack,
 .input-stack {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .guide-block {
-  padding: 12px 14px;
-  border-radius: 16px;
+  padding: 11px 12px;
+  border-radius: 14px;
   background: rgba(248, 245, 236, 0.92);
   border: 1px solid rgba(14, 29, 36, 0.07);
 }
 
 .guide-block h3 {
   margin: 0 0 4px;
-  font-size: 0.96rem;
+  font-size: 0.94rem;
 }
 
 .guide-block p {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 }
 
 .guide-code {
-  margin-top: 8px;
-  padding: 9px 11px;
-  border-radius: 12px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 11px;
   background: rgba(255, 255, 255, 0.84);
   border: 1px solid rgba(14, 29, 36, 0.08);
   color: var(--surface-strong);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.35;
   word-break: break-word;
 }
 
@@ -108,11 +118,11 @@
 .guide-preview-list span {
   display: inline-flex;
   align-items: center;
-  padding: 6px 10px;
+  padding: 5px 9px;
   border-radius: 999px;
   background: rgba(255, 248, 232, 0.94);
   color: var(--surface-strong);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   box-shadow: inset 0 0 0 1px rgba(14, 29, 36, 0.08);
 }
 
@@ -130,12 +140,12 @@
 
 .game-card {
   border: 1px solid rgba(14, 29, 36, 0.08);
-  border-radius: 15px;
+  border-radius: 14px;
   background: rgba(252, 248, 239, 0.84);
   color: var(--surface-strong);
-  padding: 12px 10px;
+  padding: 10px 8px;
   font: inherit;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -156,14 +166,14 @@
 
 .field-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  gap: 8px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .field--wide {
@@ -176,7 +186,7 @@
 
 .field span {
   color: var(--surface-strong);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
 }
 
@@ -185,10 +195,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid rgba(14, 29, 36, 0.12);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.86);
   color: var(--surface-strong);
-  padding: 10px 12px;
+  padding: 9px 11px;
   font: inherit;
   resize: vertical;
   transition:
@@ -197,7 +207,7 @@
 }
 
 .field textarea {
-  min-height: 72px;
+  min-height: 58px;
 }
 
 .field textarea:focus,
@@ -209,7 +219,7 @@
 
 .field small {
   color: var(--text-subtle);
-  font-size: 0.8rem;
+  font-size: 0.76rem;
 }
 
 .panel-actions {
@@ -223,9 +233,9 @@
 .button {
   border: 0;
   border-radius: 999px;
-  padding: 10px 15px;
+  padding: 9px 13px;
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -258,8 +268,8 @@
 
 .message-box,
 .empty-state {
-  padding: 12px 14px;
-  border-radius: 16px;
+  padding: 11px 12px;
+  border-radius: 14px;
   background: rgba(252, 248, 239, 0.92);
   border: 1px solid rgba(14, 29, 36, 0.08);
 }
@@ -270,7 +280,7 @@
 }
 
 .message-box--info {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .message-box strong,
@@ -292,21 +302,21 @@
 .result-toolbar {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 6px;
 }
 
 .team-card {
-  border-radius: 18px;
-  padding: 14px;
+  border-radius: 16px;
+  padding: 10px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 246, 238, 0.95));
   border: 1px solid rgba(14, 29, 36, 0.08);
@@ -317,16 +327,16 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 6px;
 }
 
 .team-card__label,
 .team-card__score span {
   display: block;
   color: var(--text-subtle);
-  font-size: 0.78rem;
-  margin-bottom: 4px;
+  font-size: 0.76rem;
+  margin-bottom: 3px;
 }
 
 .team-card__header strong,
@@ -337,7 +347,7 @@
 
 .team-card__score strong {
   display: block;
-  font-size: 1.15rem;
+  font-size: 1.06rem;
 }
 
 .team-card__members {
@@ -345,37 +355,55 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 8px;
+  gap: 0;
 }
 
 .member-row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
-  padding-top: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-top: 1px solid rgba(14, 29, 36, 0.08);
+}
+
+.member-row > div {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
 }
 
 .member-row strong {
   color: var(--surface-strong);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
+  white-space: nowrap;
 }
 
 .member-row p {
   color: var(--text-muted);
-  margin: 2px 0 0;
-  font-size: 0.8rem;
+  margin: 0;
+  font-size: 0.76rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .member-row span {
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .main-layout {
+    grid-template-columns: minmax(220px, 0.78fr) minmax(320px, 1fr) minmax(260px, 0.9fr);
+  }
 }
 
 @media (max-width: 1024px) {
   .app-shell {
-    width: min(100% - 16px, 1140px);
+    width: min(100% - 16px, 1440px);
     padding: 14px 0 24px;
   }
 
@@ -385,13 +413,18 @@
     grid-template-columns: 1fr;
   }
 
-  .right-column {
-    gap: 12px;
-  }
-
   .section-card {
     padding: 16px;
     border-radius: 18px;
+    min-height: auto;
+  }
+
+  .section-card--guide .section-card__body,
+  .section-card--input .section-card__body,
+  .section-card--result .section-card__body {
+    height: auto;
+    overflow: visible;
+    padding-right: 0;
   }
 
   .panel-actions {

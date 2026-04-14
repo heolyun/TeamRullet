@@ -7,6 +7,13 @@ export type TierDefinition = {
   aliases: string[]
 }
 
+export type ResolvedTier = {
+  definition: TierDefinition
+  key: string
+  label: string
+  score: number
+}
+
 export type GameDefinition = {
   id: GameId
   label: string
